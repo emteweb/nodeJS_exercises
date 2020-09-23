@@ -5,6 +5,11 @@ function avarage(score){
     for(var i = 0; i < score.length; i++){
         sum += score[i];
     }
+    /* score.forEach(function(score){
+        total += score;
+    });
+ */
+
     var avg =  Math.round(sum / score.length);
     console.log(avg);
 }
