@@ -1,0 +1,15 @@
+{
+  "name": "html_templates_and_ejs",
+  "version": "1.0.0",
+  "description": "Rendering HTML files",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "emteweb",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.5",
+    "express": "^4.17.1"
+  }
+}
