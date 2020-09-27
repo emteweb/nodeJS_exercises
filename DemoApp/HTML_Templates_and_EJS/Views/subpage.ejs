@@ -3,3 +3,14 @@
 <!-- 
     <%= subPageVar %> is treated as the Javascript code and anything that comes as a result of this code is printed into HTML 
 -->
+
+<% if(subPageVar.toLowerCase() === "motorcycles"){ %>
+    <p> Good choice! Motocycles rule!</p>
+<% } else { %>
+    <p>Not the best choice. You should've chosen motorcycles!</p>
+<% } %>
+
+<!-- 
+    <%= %> - used when we want to return the value of JS code to HTML
+    <% %>  - used when we just want to include JS logic in HTML file
+-->
