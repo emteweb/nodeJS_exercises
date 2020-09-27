@@ -1,3 +1,6 @@
+
+<%- include("partials/header")  %>
+
 <h1> You are on subpage: <%= subPageVar %> </h1> 
 
 <!-- 
@@ -9,6 +12,8 @@
 <% } else { %>
     <p>Not the best choice. You should've chosen motorcycles!</p>
 <% } %>
+
+<%- include("partials/footer")  %>
 
 <!-- 
     <%= %> - used when we want to return the value of JS code to HTML
