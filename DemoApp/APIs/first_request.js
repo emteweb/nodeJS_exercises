@@ -45,3 +45,23 @@ axios.get('https://jsonplaceholder.typicode.com/todos/1')
           console.log(err);
       }
   })();
+
+  (async () => {
+    try {
+        const response = await axios.get('https://jsonplaceholder.typicode.com/users/1');
+        console.log(`${response.data.name} lives in ${response.data.address.city}`);
+      } catch(err){
+          console.log(err);
+      }
+  })();
+
+  const rp = require('request-promise');
+  rp('https://jsonplaceholder.typicode.com/users/2')
+  .then((body) => {
+    const parsedData = JSON.parse(body);
+    console.log(`${parsedData.name} lives in ${parsedData.address.city}`);
+  })
+    .catch((err) => {
+      console.log('Error: ', err)
+    });
+  
