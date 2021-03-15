@@ -17,7 +17,14 @@ mongoose.connect('mongodb://localhost:27017/auth', { useNewUrlParser: true, useC
 app.set('view engine', 'ejs');
 app.set('Views', 'Views');
 app.use(express.urlencoded({extended: true}));
-app.use(session({secret: 'notagoodsecret'}));
+app.use(session({secret: 'notagoodsecret', saveUninitialized: true, resave: true}));
+
+const requireLogin = (req,res,next)=>{
+    if(!req.session.user_id){
+        return res.redirect('/login');
+    }
+    next();
+}
 
 app.get('/', (req,res)=>{
     res.send('THIS IS THE HOME PAGE!');
@@ -30,10 +37,14 @@ app.get('/login', (req,res)=> {
 app.post('/login', async (req,res)=> {
     //res.send(req.body);
     const{username,password} = req.body;
-    const user = await User.findOne({username});
-    const validPassword = await bcrypt.compare(password, user.password);
-    if(validPassword){
-        req.session.user_id = user._id;
+    // find-and-validate logic moved to 'model' file
+    /* const user = await User.findOne({username});
+    const validPassword = await bcrypt.compare(password, user.password); */
+    const foundUser = await User.findAndValidate(username,password); //middleware function defined in model
+    //if(validPassword){
+    if(foundUser){
+        //req.session.user_id = user._id;
+        req.session.user_id = foundUser._id;
         res.send("You logged in!")
     } else {
         res.send("Try again!")
@@ -43,7 +54,8 @@ app.post('/login', async (req,res)=> {
 app.get('/register', (req,res)=> {
     res.render('register');
 })
-app.post('/register',async (req,res)=>{
+// Option 1: we hash the password and pass it to a user
+/* app.post('/register',async (req,res)=>{
     //res.send(req.body);
     const{username,password} = req.body;
     const hash = await bcrypt.hash(password,12);
@@ -56,6 +68,16 @@ app.post('/register',async (req,res)=>{
     req.session.user_id = user._id;
     res.redirect('/')
 });
+ */
+// Option 2: we pass in regular password and let the middleware hash it before saving
+app.post('/register',async (req,res)=>{
+    //res.send(req.body);
+    const{username,password} = req.body;
+    const user = new User({username, password});
+    await user.save();
+    req.session.user_id = user._id;
+    res.redirect('/')
+});
 
 app.post('/logout', (req,res)=> {
     //req.session.user_id = null; //or
@@ -63,10 +85,10 @@ app.post('/logout', (req,res)=> {
     res.redirect('/login');
 })
 
-app.get('/secret', (req,res)=>{
-    if(!req.session.user_id){
+app.get('/secret', requireLogin,(req,res)=>{
+    /* if(!req.session.user_id){
         return res.redirect('/login')
-    } 
+    }  */
         res.render('secret')
 })
 
